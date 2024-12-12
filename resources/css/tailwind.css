@@ -1,0 +1,5 @@
+@import '../../node_modules/system-font-css/system-font.css';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import '../../vendor/combindma/dash-ui/resources/css/dashui.css';
+@import "tailwindcss/utilities";
