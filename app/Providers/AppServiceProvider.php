@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
             // Convert the payload to an associative array
             $payloadArray = json_decode($payload, true);
 
-            return $payloadArray['exp'] ?? "";
+            return $payloadArray['exp'] ? ($payloadArray['exp'] * 1000) - 100 : "";
             // Access the 'exp' claim (expiration time)
         }
     }
