@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Laravel</title>
     <link rel="preconnect" href="https://rsms.me/">
@@ -13,8 +14,8 @@
 <body class="antialiased">
 
 
-<div class="mx-auto mt-14 max-w-7xl p-4 lg:p-6 m-auto">
-    @include('partials.navigation')
+<div class="mx-auto mt-14 max-w-52 p-4 lg:p-6 m-auto" style="max-width: 760px;">
+    {{--@include('partials.navigation')--}}
 
     <main>
         <x-turbo::frame id="content-frame">
@@ -28,23 +29,9 @@
 
 
 <script src="https://unpkg.com/codyhouse-framework/main/assets/js/util.js"></script>
-<script src="{{config('shopify-app.appbridge_cdn_url') ?? 'https://unpkg.com'}}/@shopify/app-bridge{{ \Osiset\ShopifyApp\Util::getShopifyConfig('appbridge_version') ? '@'.config('shopify-app.appbridge_version') : '' }}"></script>
-
-{{--<script
-    @if(\Osiset\ShopifyApp\Util::getShopifyConfig('turbo_enabled'))
-        data-turbolinks-eval="false"
-    @endif
->
-    var AppBridge = window['app-bridge'];
-    var actions = AppBridge.actions;
-    var utils = AppBridge.utilities;
-    var createApp = AppBridge.default;
-    var app = createApp({
-        apiKey: "{{ \Osiset\ShopifyApp\Util::getShopifyConfig('api_key', $shopDomain ?? Auth::user()->name ) }}",
-        host: "{{ \Request::get('host') }}",
-        forceRedirect: true,
-    });
-</script>--}}
+<script>
+    let appEnv = "{{ env('APP_ENV', 'testing') }}";
+</script>
 @vite(['resources/js/app.js'])
 @stack('scripts')
 </body>

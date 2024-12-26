@@ -21,11 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $forceRedirect = env('SHOPIFY_FORCE_REDIRECT', true);
         $conf = [
             'apiKey' => \Osiset\ShopifyApp\Util::getShopifyConfig('api_key', "myshop.myshopify.com" ),
             'shopOrigin' => "myshop.myshopify.com",
             'host' => base64_encode("myshop.myshopify.com"),
-            'forceRedirect' => true,
+            'forceRedirect' => $forceRedirect,
             'loadPath' => '/',
             'expireAt' => $this->getExpireAt(),
         ];
@@ -38,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
                     'apiKey' => \Osiset\ShopifyApp\Util::getShopifyConfig('api_key', $shopDomain ?? Auth::user()->name),
                     'shopOrigin' => request()->get('shop'),
                     'host' => request()->get('host'),
-                    'forceRedirect' => true,
+                    'forceRedirect' => $forceRedirect,
                     'loadPath' => '/',
                     'expireAt' => $this->getExpireAt(),
                 ];

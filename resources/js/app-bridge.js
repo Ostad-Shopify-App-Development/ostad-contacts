@@ -19,8 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('turbo:before-fetch-request', async (event) => {
         event.preventDefault()
 
-        window.sessionToken = await retrieveToken();
-        event.detail.fetchOptions.headers['Authorization'] = `Bearer ${window.sessionToken}`
+        if (appEnv !== 'testing') {
+            window.sessionToken = await retrieveToken();
+            event.detail.fetchOptions.headers['Authorization'] = `Bearer ${window.sessionToken}`
+        }
+
         event.detail.fetchOptions.headers['X-Requested-With'] = 'XMLHttpRequest';
 
         event.detail.resume()

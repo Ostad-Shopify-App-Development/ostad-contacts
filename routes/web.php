@@ -2,7 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'verify.shopify']], function () {
+$middleware = ['web'];
+
+if (!app()->environment('testing')) {
+    $middleware[] = 'verify.shopify';
+}
+
+Route::group(['middleware' => $middleware], function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('home');
@@ -14,6 +20,12 @@ Route::group(['middleware' => ['web', 'verify.shopify']], function () {
     Route::get('/settings', function () {
         return view('settings');
     })->name('settings');
+
+    Route::post('/settings/form-labels', function () {
+        return view('settings');
+    })->name('settings.form-labels');
+
+
 });
 
 
