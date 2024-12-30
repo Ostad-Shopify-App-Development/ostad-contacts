@@ -25,6 +25,11 @@
 </div>
 
 <div class="no"></div>
+
+<div id="flash">
+
+</div>
+
 @include('partials.appbridge-data')
 
 

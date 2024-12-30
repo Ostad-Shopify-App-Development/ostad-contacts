@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use HotwiredLaravel\TurboLaravel\Http\PendingTurboStreamResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades;
@@ -31,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
             'expireAt' => $this->getExpireAt(),
         ];
         $shopDomain = request()->get('shop');
-        Facades\View::composer('partials.appbridge-data', function ($view) use ($shopDomain, $conf) {
+        Facades\View::composer('partials.appbridge-data', function ($view) use ($shopDomain, $conf, $forceRedirect) {
 
             if (app()->environment() !== 'testing') {
 
@@ -47,6 +48,15 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with($conf);
         });
+
+        PendingTurboStreamResponse::macro('flash', function (string $message, ?string $type = 'success') {
+
+            return turbo_stream()->prepend('flash', view('partials.flash', [
+                'status' => $type,
+                'message' => $message,
+            ]));
+        });
+
     }
 
     protected function getExpireAt()

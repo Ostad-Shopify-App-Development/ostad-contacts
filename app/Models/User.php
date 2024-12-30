@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 use Osiset\ShopifyApp\Contracts\ShopModel as IShopModel;
 use Osiset\ShopifyApp\Traits\ShopModel;
 
@@ -23,6 +24,7 @@ class User extends Authenticatable implements IShopModel
         'name',
         'email',
         'password',
+        'settings',
     ];
 
     /**
@@ -45,6 +47,17 @@ class User extends Authenticatable implements IShopModel
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'settings' => 'array',
         ];
+    }
+
+    public function config(?string $path = null): mixed
+    {
+        $settings = $this->settings ?? [];
+        $default = config("contact-app.settings", []);
+
+        $config = array_replace_recursive($default, $settings);
+
+        return Arr::get($config, $path);
     }
 }
