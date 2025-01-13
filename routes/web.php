@@ -20,10 +20,12 @@ Route::group(['middleware' => $middleware], function () {
     Route::get('/settings', function () {
         $user = auth()->user();
         $labels = $user->config('form-labels');
-        return view('settings.index', compact('labels'));
+        $customization = $user->config('customization');
+        $general = $user->config('general');
+        return view('settings.index', compact('labels', 'customization', 'general'));
     })->name('settings');
 
-    Route::post('/settings/form-labels', function (\Illuminate\Http\Request $request) {
+    Route::post('/settings/form-labels', function (\Illuminate\Http\Request $request, \App\Services\MetafieldService $metafieldService) {
         $user = auth()->user();
         $userSettings = $user->settings ?? [];
         $userSettings['form-labels'] = $request->only(['name', 'email', 'subject', 'message']);
@@ -34,12 +36,81 @@ Route::group(['middleware' => $middleware], function () {
             return turbo_stream()->flash("Failed to save!", 'error');
         }
 
+        $metafield = [
+            'key' => 'settings',
+            'value' => json_encode($user->settings),
+            'namespace' => 'ostad_contact',
+            'ownerId' => $user->shopify_id,
+            'type' => 'json',
+        ];
+
+        $metafieldService->updateMetafield($user, $metafield);
+
         return turbo_stream([
             turbo_stream()->update('form-labels', view('settings.form-labels', ['labels' => $request->only(['name', 'email', 'subject', 'message'])])),
             turbo_stream()->flash("Successfully saved!", 'success'),
         ]);
 
     })->name('settings.form-labels');
+
+    Route::post('/settings/form-customization', function (\Illuminate\Http\Request $request, \App\Services\MetafieldService $metafieldService) {
+        $user = auth()->user();
+        $userSettings = $user->settings ?? [];
+        $userSettings['customization'] = $request->only(['title', 'success_message']);
+
+        $user->settings = $userSettings;
+        if (!$user->save()) {
+            turbo_stream()->update('form-customization', view('settings.form-customization',['customization' => $request->only(['title', 'success_message'])]));
+            return turbo_stream()->flash("Failed to save!", 'error');
+        }
+
+        $metafield = [
+            'key' => 'settings',
+            'value' => json_encode($user->settings),
+            'namespace' => 'ostad_contact',
+            'ownerId' => $user->shopify_id,
+            'type' => 'json',
+        ];
+
+        $metafieldService->updateMetafield($user, $metafield);
+
+        return turbo_stream([
+            turbo_stream()->update('form-customization', view('settings.form-customization', ['customization' => $request->only(['title', 'success_message'])])),
+            turbo_stream()->flash("Successfully saved!", 'success'),
+        ]);
+
+    })->name('settings.form-customization');
+
+
+
+    Route::post('/settings/form-general', function (\Illuminate\Http\Request $request, \App\Services\MetafieldService $metafieldService) {
+
+        $user = auth()->user();
+        $userSettings = $user->settings ?? [];
+        $userSettings['general'] = $request->only(['send_confirmation_mail', 'save_as_customer', 'admin_notification']);
+
+        $user->settings = $userSettings;
+        if (!$user->save()) {
+            turbo_stream()->update('form-general', view('settings.form-general',['general' => $user->config('general')]));
+            return turbo_stream()->flash("Failed to save!", 'error');
+        }
+
+        $metafield = [
+            'key' => 'settings',
+            'value' => json_encode($user->settings),
+            'namespace' => 'ostad_contact',
+            'ownerId' => $user->shopify_id,
+            'type' => 'json',
+        ];
+
+        $metafieldService->updateMetafield($user, $metafield);
+
+        return turbo_stream([
+            turbo_stream()->update('form-general', view('settings.form-general', ['general' => $user->config('general')])),
+            turbo_stream()->flash("Successfully saved!", 'success'),
+        ]);
+
+    })->name('settings.form-general');
 
 
 });
