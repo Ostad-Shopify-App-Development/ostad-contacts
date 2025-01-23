@@ -1,7 +1,7 @@
 import createApp from "@shopify/app-bridge";
 import {getSessionToken} from "@shopify/app-bridge/utilities";
 import {AppLink, NavigationMenu} from "@shopify/app-bridge/actions";
-import {setupRedirectHandler} from "@/navigation.js";
+import {setupRedirectHandler} from "./navigation.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const shopifyAppInit = document.getElementById('shopify-app-init')
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Append Shopify's JWT to every Turbo request
     document.addEventListener('turbo:before-fetch-request', async (event) => {
         event.preventDefault()
+        let appEnv = document.querySelector('meta[name="app-env"]').content
 
         if (appEnv !== 'testing') {
             window.sessionToken = await retrieveToken();
