@@ -115,4 +115,15 @@ Route::group(['middleware' => $middleware], function () {
 
 });
 
+Route::get('/t', function () {
+    /**
+     * @var \Osiset\ShopifyApp\Contracts\ShopModel $shop
+     */
+   $shop = \App\Models\User::first();
+
+   $resp = $shop->api()->graph(view('graphql.shop-info')->render());
+
+   dd($resp['body']['data']['shop']['name']);
+});
+
 
