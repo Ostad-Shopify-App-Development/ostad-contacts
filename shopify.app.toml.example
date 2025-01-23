@@ -1,0 +1,16 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "a3c1081bf1dbe11f05cc0708fbffac97"
+application_url = "https://dear-workable-earwig.ngrok-free.app/"
+embedded = true
+name = "Ostad Contacts"
+handle = "ostad-contacts"
+
+[webhooks]
+api_version = "2024-10"
+
+[auth]
+redirect_urls = [ "https://dear-workable-earwig.ngrok-free.app/authenticate" ]
+
+[pos]
+embedded = false
