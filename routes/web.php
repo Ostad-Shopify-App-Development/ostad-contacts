@@ -126,4 +126,11 @@ Route::get('/t', function () {
    dd($resp['body']['data']['shop']['name']);
 });
 
+Route::group(['prefix'=> 'storefront'], function () {
+    Route::post('/form', function (\Illuminate\Http\Request $request) {
+
+    })->name('contact');
+
+});
+
 

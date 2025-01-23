@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "a3c1081bf1dbe11f05cc0708fbffac97"
+client_id = ""
 application_url = "https://dear-workable-earwig.ngrok-free.app/"
 embedded = true
 name = "Ostad Contacts"
