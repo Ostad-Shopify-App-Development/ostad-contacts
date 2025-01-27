@@ -127,9 +127,7 @@ Route::get('/t', function () {
 });
 
 Route::group(['prefix'=> 'storefront'], function () {
-    Route::post('/form', function (\Illuminate\Http\Request $request) {
-
-    })->name('contact');
+    Route::post('/form', [\App\Http\Controllers\FormController::class, 'storeResponse'])->name('contact');
 
 });
 

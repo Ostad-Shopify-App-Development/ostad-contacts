@@ -38,19 +38,22 @@ input[type=submit]:hover {
 <h2>{{ settings['customization']['title'] }}</h2>
 <br/>
 <div class="container">
+    <div id="ostad-form-message" style="font-size: 16px; font-weight: bold;"></div>
   <form id="ostad-form" action="https://dear-workable-earwig.ngrok-free.app/storefront/form" method="post">
-    <label for="name">Name</label>
+    <label for="name">{{ settings['form-labels']['name'] }}</label>
     <input type="text" id="name" name="name" placeholder="Your name..">
 
-    <label for="email">Email</label>
+    <label for="email">{{ settings['form-labels']['email'] }}</label>
     <input type="text" id="email" name="email" placeholder="Your email..">
 
 
-    <label for="subject">Subject</label>
+    <label for="subject">{{ settings['form-labels']['subject'] }}</label>
     <input type="text" id="subject" name="subject" placeholder="Subject">
 
-    <label for="message">Message</label>
+    <label for="message">{{ settings['form-labels']['message'] }}</label>
     <textarea id="message" name="message" placeholder="Write something.." style="height:200px"></textarea>
+
+      <input type="hidden" name="shop" value="{{ shop.domain }}">
 
     <input type="submit" value="Submit">
 
@@ -61,15 +64,20 @@ input[type=submit]:hover {
     document.querySelector('#ostad-form').addEventListener('submit', function(e) {
         e.preventDefault();
         var formData = new FormData(e.target);
-        fetch(e.target.action, {
+        let url = e.target.action;
+        fetch(url, {
             method: 'POST',
             body: formData
-        }).then(function(response) {
+        }).then(async function (response) {
+            let msgDiv = document.querySelector('#ostad-form-message');
+            let data = await response.json();
+            let msg = data.message;
             if (response.ok) {
-                alert('Form submitted successfully');
+                msgDiv.style.color = 'green';
             } else {
-                alert('Form submission failed');
+                msgDiv.style.color = 'red';
             }
+            msgDiv.innerHTML = msg;
         });
     });
 </script>

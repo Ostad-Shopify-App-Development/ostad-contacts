@@ -16,7 +16,6 @@
 
 <div class="mx-auto mt-14 max-w-52 p-4 lg:p-6 m-auto" style="max-width: 760px;">
     {{--@include('partials.navigation')--}}
-    <a href="{{ route('dash') }}" data-turbo="true"  data-turbo-action="advance">Dashboard</a>
     <main>
         <x-turbo::frame id="content-frame">
             @yield('content')

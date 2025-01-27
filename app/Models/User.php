@@ -52,13 +52,13 @@ class User extends Authenticatable implements IShopModel
         ];
     }
 
-    public function config(?string $path = null): mixed
+    public function config(?string $path = null, mixed $default = null): mixed
     {
         $settings = $this->settings ?? [];
         $default = config("contact-app.settings", []);
 
         $config = array_replace_recursive($default, $settings);
 
-        return Arr::get($config, $path);
+        return Arr::get($config, $path, $default);
     }
 }

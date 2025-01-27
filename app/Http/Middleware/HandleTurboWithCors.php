@@ -22,7 +22,7 @@ class HandleTurboWithCors
             // Bypass CORS middleware for Turbo prefetch requests
             return $next($request);
         }
-        
+
         // Apply CORS middleware for other requests
         return app(HandleCors::class)->handle($request, $next);
     }
