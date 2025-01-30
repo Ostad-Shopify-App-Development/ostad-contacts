@@ -113,9 +113,16 @@ Route::group(['middleware' => $middleware], function () {
     })->name('settings.form-general');
 
 
+    Route::get('/responses', [\App\Http\Controllers\FormController::class, 'index'])->name('responses.index');
+
+
 });
 
 Route::get('/t', function () {
+    \Illuminate\Support\Facades\Mail::to('nahid@jouleslabs.com')
+        ->send(new \App\Mail\TestMail());
+
+    return 'Mail sent';
     /**
      * @var \Osiset\ShopifyApp\Contracts\ShopModel $shop
      */

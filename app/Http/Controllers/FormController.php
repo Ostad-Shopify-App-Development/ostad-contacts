@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendAdminNotificationMail;
+use App\Mail\SendConfirmationMail;
 use App\Models\FormResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
+    public function index()
+    {
+        $responses = FormResponse::query()->orderBy('created_at', 'desc')->get();
+        return view('responses.index', compact('responses'));
+    }
     public function storeResponse(Request $request)
     {
         $rules = [
@@ -43,6 +51,19 @@ class FormController extends Controller
         $formResponse = new FormResponse();
         $formResponse->fill($data);
         $formResponse->save();
+
+        $adminEmail = $shop->config('general.admin_notification');
+        $wantsConfirmation = $shop->config('general.send_confirmation_mail', false);
+
+        logger()->info('confirmation', [$wantsConfirmation]);
+
+        if ($adminEmail) {
+            Mail::to($adminEmail)->send(new SendAdminNotificationMail($formResponse));
+        }
+
+        if ($wantsConfirmation) {
+            Mail::to($data['email'])->send(new SendConfirmationMail($formResponse));
+        }
 
         return response()->json([
             'message' => $shop->config('customization.success_message', 'Thank you for your message'),

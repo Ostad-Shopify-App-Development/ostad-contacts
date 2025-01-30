@@ -63,6 +63,11 @@ function registerEmbeddedNavManu(app) {
         destination: '/',
     });
 
+    const responsesLink = AppLink.create(app, {
+        label: 'Responses',
+        destination: '/responses',
+    });
+
     const settingsLink = AppLink.create(app, {
         label: 'Settings',
         destination: '/settings',
@@ -80,6 +85,7 @@ function registerEmbeddedNavManu(app) {
             homeLink,
             settingsLink,
             dashLink,
+            responsesLink,
         ],
         active: settingsLink,
     });
