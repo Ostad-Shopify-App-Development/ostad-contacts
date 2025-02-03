@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FormSubmittedEvent;
 use App\Mail\SendAdminNotificationMail;
 use App\Mail\SendConfirmationMail;
 use App\Models\FormResponse;
@@ -63,6 +64,10 @@ class FormController extends Controller
 
         if ($wantsConfirmation) {
             Mail::to($data['email'])->send(new SendConfirmationMail($formResponse));
+        }
+
+        if ($shop->config('general.save_as_customer', false)) {
+            event(new FormSubmittedEvent($formResponse));
         }
 
         return response()->json([
